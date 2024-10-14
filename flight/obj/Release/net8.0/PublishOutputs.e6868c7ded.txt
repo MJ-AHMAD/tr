@@ -1,0 +1,7 @@
+G:\source\flight\flight\obj\Release\net8.0\PubTmp\Out\flight.exe
+G:\source\flight\flight\obj\Release\net8.0\PubTmp\Out\appsettings.Development.json
+G:\source\flight\flight\obj\Release\net8.0\PubTmp\Out\appsettings.json
+G:\source\flight\flight\obj\Release\net8.0\PubTmp\Out\flight.dll
+G:\source\flight\flight\obj\Release\net8.0\PubTmp\Out\flight.deps.json
+G:\source\flight\flight\obj\Release\net8.0\PubTmp\Out\flight.runtimeconfig.json
+G:\source\flight\flight\obj\Release\net8.0\PubTmp\Out\flight.pdb

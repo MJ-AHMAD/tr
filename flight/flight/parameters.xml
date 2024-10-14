@@ -1,0 +1,5 @@
+﻿<parameters>
+  <parameter name="IIS Web Application Name" value="flight" tags="IisApp">
+    <parameterEntry kind="ProviderPath" scope="IisApp" match="^G:\\source\\flight\\flight\\obj\\Release\\net8\.0\\PubTmp\\Out\\$" />
+  </parameter>
+</parameters>
