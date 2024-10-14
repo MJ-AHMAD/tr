@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flight Search</title>
+</head>
+<body>
+<h1>Flight Search Engine</h1>
+<form id="flight-search-form">
+<input type="text" id="origin" placeholder="Origin" required>
+<input type="text" id="destination" placeholder="Destination" required>
+<input type="date" id="departure-date" required>
+<button type="submit">Search Flights</button>
+</form>
+<div id="results"></div>
+
+<script>
+document.getElementById('flight-search-form').addEventListener('submit', function(event) {
+event.preventDefault();
+const origin = document.getElementById('origin').value;
+const destination = document.getElementById('destination').value;
+const departureDate = document.getElementById('departure-date').value;
+
+fetch(`https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=${origin}&destinationLocationCode=${destination}&departureDate=${departureDate}`, {
+method: 'GET',
+headers: {
+'Authorization': 'Bearer 6frwT0GA7ISTpRcBg8M6CnPevK9kqy42'
+}
+})
+.then(response => response.json())
+.then(data => {
+const resultsDiv = document.getElementById('results');
+resultsDiv.innerHTML = JSON.stringify(data, null, 2);
+})
+.catch(error => console.error('Error:', error));
+});
+</script>
+</body>
+</html>
