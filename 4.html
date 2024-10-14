@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flight Search</title>
+<style>
+#results {
+white-space: pre-wrap; /* JSON ডেটা সুন্দরভাবে প্রদর্শনের জন্য */
+}
+.flight {
+border: 1px solid #ccc;
+padding: 10px;
+margin: 10px 0;
+}
+</style>
+</head>
+<body>
+<h1>Flight Search Engine</h1>
+<form id="flight-search-form">
+<input type="text" id="origin" placeholder="Origin (e.g., DAC)" required>
+<input type="text" id="destination" placeholder="Destination (e.g., JED)" required>
+<input type="date" id="departure-date" required>
+<button type="submit">Search Flights</button>
+</form>
+<div id="results"></div>
+
+<script>
+// Access Token জেনারেট করার জন্য নিচের কোডটি ব্যবহার করুন
+fetch('https://test.api.amadeus.com/v1/security/oauth2/token', {
+method: 'POST',
+headers: {
+'Content-Type': 'application/x-www-form-urlencoded'
+},
+body: new URLSearchParams({
+'grant_type': 'client_credentials',
+'client_id': 'IAdRK7OA8APheG6fswXod39h9fiK52tz', // এখানে আপনার API Key বসান
+'client_secret': 'JxrFEAiPI3KfkL4R' // এখানে আপনার API Secret বসান
+})
+})
+.then(response => response.json())
+.then(data => {
+const accessToken = data.access_token;
+// Access Token ব্যবহার করে API কল করুন
+document.getElementById('flight-search-form').addEventListener('submit', function(event) {
+event.preventDefault();
+const origin = document.getElementById('origin').value;
+const destination = document.getElementById('destination').value;
+const departureDate = document.getElementById('departure-date').value;
+
+fetch(`https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=${origin}&destinationLocationCode=${destination}&departureDate=${departureDate}&adults=1`, {
+method: 'GET',
+headers: {
+'Authorization': `Bearer ${accessToken}`
+}
+})
+.then(response => response.json())
+.then(data => {
+const resultsDiv = document.getElementById('results');
+resultsDiv.innerHTML = ''; // পূর্বের ফলাফল মুছে ফেলুন
+
+data.data.forEach(flight => {
+const flightDiv = document.createElement('div');
+flightDiv.classList.add('flight');
+
+const airline = flight.validatingAirlineCodes[0];
+const price = flight.price.total;
+
+flightDiv.innerHTML = `
+<p><strong>Airline:</strong> ${airline}</p>
+<p><strong>Price:</strong> $${price}</p>
+`;
+
+resultsDiv.appendChild(flightDiv);
+});
+})
+.catch(error => console.error('Error:', error));
+});
+})
+.catch(error => console.error('Error:', error));
+</script>
+</body>
+</html>
