@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Booking</title>
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+    <form id="payment-form">
+        <div>
+            <label for="flight">Flight:</label>
+            <select id="flight" name="flight">
+                <option value="flight1">Flight 1</option>
+                <option value="flight2">Flight 2</option>
+            </select>
+        </div>
+        <div id="card-element"></div>
+        <button type="submit">Book Flight</button>
+    </form>
+    <div id="payment-result"></div>
+    <script src="payment.js"></script>
+</body>
+</html>
