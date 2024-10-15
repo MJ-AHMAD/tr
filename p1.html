@@ -19,6 +19,69 @@
         <button type="submit">Book Flight</button>
     </form>
     <div id="payment-result"></div>
-    <script src="payment.js"></script>
+    <script>
+
+const stripe = Stripe('your-publishable-key-here');
+const elements = stripe.elements();
+const cardElement = elements.create('card');
+cardElement.mount('#card-element');
+
+const form = document.getElementById('payment-form');
+form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const { paymentMethod, error } = await stripe.createPaymentMethod({
+        type: 'card',
+        card: cardElement,
+    });
+
+    if (error) {
+        document.getElementById('payment-result').textContent = error.message;
+    } else {
+        // Send paymentMethod.id to your server
+        fetch('/create-payment-intent', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ paymentMethodId: paymentMethod.id, flight: form.flight.value }),
+        }).then(response => response.json()).then(data => {
+            if (data.error) {
+                document.getElementById('payment-result').textContent = data.error;
+            } else {
+                document.getElementById('payment-result').textContent = 'Payment successful!';
+            }
+        });
+    }
+});
+
+</script>
+<script>
+const express = require('express');
+const app = express();
+const stripe = require('stripe')('your-secret-key-here');
+
+app.use(express.static('.'));
+app.use(express.json());
+
+app.post('/create-payment-intent', async (req, res) => {
+    const { paymentMethodId, flight } = req.body;
+
+    try {
+        const paymentIntent = await stripe.paymentIntents.create({
+            amount: 1000, // Example amount in cents
+            currency: 'usd',
+            payment_method: paymentMethodId,
+            confirmation_method: 'manual',
+            confirm: true,
+        });
+
+        res.send({ success: true });
+    } catch (error) {
+        res.send({ error: error.message });
+    }
+});
+
+app.listen(3000, () => console.log('Server running on port 3000'));
+
+</script>
 </body>
 </html>
