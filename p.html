@@ -1,20 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Entry Form</title>
+<title>Contact Form</title>
+<script>
+function submitForm(event) {
+event.preventDefault();
+const formData = new FormData(event.target);
+const data = {};
+formData.forEach((value, key) => {
+data[key] = value;
+});
+
+fetch('https://your-api-endpoint.com/collect', {
+method: 'POST',
+headers: {
+'Content-Type': 'application/json'
+},
+body: JSON.stringify(data)
+})
+.then(response => response.json())
+.then(data => {
+console.log('Success:', data);
+alert('Form submitted successfully!');
+})
+.catch((error) => {
+console.error('Error:', error);
+alert('There was an error submitting the form.');
+});
+}
+</script>
 </head>
 <body>
-    <h2>Data Entry Form</h2>
-    <form action="submit.php" method="post">
-        <label for="name">Name:</label><br>
-        <input type="text" id="name" name="name" required><br><br>
-        <label for="email">Email:</label><br>
-        <input type="email" id="email" name="email" required><br><br>
-        <label for="age">Age:</label><br>
-        <input type="number" id="age" name="age" required><br><br>
-        <input type="submit" value="Submit">
-    </form>
+<h1>Contact Form</h1>
+<form onsubmit="submitForm(event)">
+<label for="name">Name:</label>
+<input type="text" id="name" name="name" required><br><br>
+<label for="email">Email:</label>
+<input type="email" id="email" name="email" required><br><br>
+<label for="message">Message:</label>
+<textarea id="message" name="message" required></textarea><br><br>
+<input type="submit" value="Submit">
+</form>
 </body>
 </html>
