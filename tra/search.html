@@ -5,49 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flight Search Engine</title>
     <style>
+        /* Your existing styles */
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
-        header {
-            background-color: #333;
-            color: #fff;
-            padding: 1rem;
-            text-align: center;
-        }
-        .container {
-            max-width: 600px;
-            margin: 2rem auto;
-            padding: 2rem;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        label {
-            display: block;
-            margin: 0.5rem 0;
-        }
-        input[type="text"], input[type="date"], button {
-            width: 100%;
-            padding: 0.5rem;
-            margin: 0.5rem 0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        button {
-            background-color: #007BFF;
             color: #fff;
             border: none;
         }
     </style>
+    <!-- Include Amadeus SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@amadeus/amadeus-js"></script>
 </head>
 <body>
     <header>
         <h1>Flight Search Engine</h1>
     </header>
     <div class="container">
-        <form action="search_results.html" method="GET">
+        <form id="flight-search-form">
             <label for="from">Departing From:</label>
             <input type="text" id="from" name="from" required>
 
@@ -62,6 +34,31 @@
 
             <button type="submit">Search Flights</button>
         </form>
+        <div id="results"></div>
     </div>
+
+    <script>
+        document.getElementById('flight-search-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const from = document.getElementById('from').value;
+            const to = document.getElementById('to').value;
+            const departureDate = document.getElementById('departure-date').value;
+            const returnDate = document.getElementById('return-date').value;
+
+            fetch(`https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=${from}&destinationLocationCode=${to}&departureDate=${departureDate}&returnDate=${returnDate}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer YOUR_ACCESS_TOKEN'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const resultsDiv = document.getElementById('results');
+                resultsDiv.innerHTML = JSON.stringify(data, null, 2);
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
 </body>
 </html>
