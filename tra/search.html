@@ -36,7 +36,7 @@
     </div>
 
     <script>
-        document.getElementById('flight-search-form').addEventListener('submit', function(event) {
+        function handleFormSubmission(event) {
             event.preventDefault();
 
             const from = document.getElementById('from').value;
@@ -47,7 +47,7 @@
             fetch(`https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=${from}&destinationLocationCode=${to}&departureDate=${departureDate}&returnDate=${returnDate}`, {
                 method: 'GET',
                 headers: {
-                    'Authorization': 'Bearer YOUR_ACCESS_TOKEN'
+                    'Authorization': 'Bearer AUcgJZ6gtrI60afudJaDSuwKmyUoyTAN'
                 }
             })
             .then(response => response.json())
@@ -56,7 +56,9 @@
                 resultsDiv.innerHTML = JSON.stringify(data, null, 2);
             })
             .catch(error => console.error('Error:', error));
-        });
+        }
+
+        document.getElementById('flight-search-form').addEventListener('submit', handleFormSubmission);
     </script>
 </body>
 </html>
