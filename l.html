@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Booking</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f9f9f9;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+        }
+        header {
+            background: #35424a;
+            color: #ffffff;
+            padding-top: 30px;
+            min-height: 70px;
+            border-bottom: #e8491d 3px solid;
+        }
+        header a {
+            color: #ffffff;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 16px;
+        }
+        #showcase {
+            min-height: 400px;
+            background: url('showcase.jpg') no-repeat 0 -400px;
+            text-align: center;
+            color: #ffffff;
+        }
+        #showcase h1 {
+            margin-top: 100px;
+            font-size: 55px;
+            margin-bottom: 10px;
+        }
+        form {
+            background: #ffffff;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid #e8491d;
+        }
+        form div {
+            margin-bottom: 10px;
+        }
+        form div label {
+            display: block;
+        }
+        form div input, form div select {
+            width: 100%;
+            padding: 10px;
+        }
+        .btn {
+            display: inline-block;
+            color: #ffffff;
+            background: #e8491d;
+            padding: 10px 20px;
+            text-align: center;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div id="branding">
+                <h1><span class="highlight">Flight</span> Booking</h1>
+            </div>
+        </div>
+    </header>
+
+    <section id="showcase">
+        <div class="container">
+            <h1>Search and Book Your Flight</h1>
+        </div>
+    </section>
+
+    <div class="container">
+        <h2>Search Flights</h2>
+        <form id="searchForm">
+            <div>
+                <label for="from">From</label>
+                <input type="text" id="from" name="from" required>
+            </div>
+            <div>
+                <label for="to">To</label>
+                <input type="text" id="to" name="to" required>
+            </div>
+            <div>
+                <label for="departure">Departure Date</label>
+                <input type="date" id="departure" name="departure" required>
+            </div>
+            <div>
+                <label for="return">Return Date</label>
+                <input type="date" id="return" name="return">
+            </div>
+            <div>
+                <label for="adults">Adults (1-9)</label>
+                <input type="number" id="adults" name="adults" min="1" max="9" required>
+            </div>
+            <div>
+                <label for="children">Children (0-4)</label>
+                <input type="number" id="children" name="children" min="0" max="4" required>
+            </div>
+            <div>
+                <label for="flightType">Flight Type</label>
+                <select id="flightType" name="flightType" required>
+                    <option value="direct">Direct</option>
+                    <option value="indirect">Indirect</option>
+                </select>
+            </div>
+            <div>
+                <button type="submit" class="btn">Search</button>
+            </div>
+        </form>
+
+        <h2>Book Your Flight</h2>
+        <form id="bookingForm">
+            <div>
+                <label for="fullname">Full Name</label>
+                <input type="text" id="fullname" name="fullname" required>
+            </div>
+            <div>
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div>
+                <label for="passport">Passport Number</label>
+                <input type="text" id="passport" name="passport" required>
+            </div>
+            <div>
+                <label for="flight">Flight</label>
+                <select id="flight" name="flight" required>
+                    <option value="">Select Flight</option>
+                </select>
+            </div>
+            <div>
+                <button type="submit" class="btn">Book</button>
+            </div>
+        </form>
+
+        <h2>Payment</h2>
+        <form id="paymentForm">
+            <div>
+                <label for="cardname">Name on Card</label>
+                <input type="text" id="cardname" name="cardname" required>
+            </div>
+            <div>
+                <label for="cardnumber">Card Number</label>
+                <input type="text" id="cardnumber" name="cardnumber" required>
+            </div>
+            <div>
+                <label for="expdate">Expiry Date</label>
+                <input type="text" id="expdate" name="expdate" required>
+            </div>
+            <div>
+                <label for="cvv">CVV</label>
+                <input type="text" id="cvv" name="cvv" required>
+            </div>
+            <div>
+                <button type="submit" class="btn">Pay</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('searchForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Search functionality not implemented');
+        });
+
+        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Booking functionality not implemented');
+        });
+
+        document.getElementById('paymentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Payment functionality not implemented');
+        });
+    </script>
+</body>
+</html>
