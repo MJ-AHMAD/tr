@@ -136,6 +136,15 @@
         </form>
         <div id="results"></div>
     </div>
+<div id="results">
+    <div class="flight-offer">
+        <h3>Flight from <span id="from-city"></span> to <span id="to-city"></span></h3>
+        <p>Departure: <span id="departure-date"></span></p>
+        <p>Return: <span id="return-date"></span></p>
+        <p>Price: <span id="price"></span></p>
+        <button class="book-now" data-flight-id="12345">Book Now</button>
+    </div>
+</div>
 
     <script>
         const client_id = 'AUcgJZ6gtrI60afudJaDSuwKmyUoyTAN';
@@ -221,5 +230,22 @@
 
         document.getElementById('flight-search-form').addEventListener('submit', handleFormSubmission);
     </script>
+<script>
+document.querySelectorAll('.book-now').forEach(button => {
+    button.addEventListener('click', function() {
+        const flightId = this.getAttribute('data-flight-id');
+        
+        // ফ্লাইটের যাবতীয় তথ্য সংগ্রহ করুন
+        const fromCity = document.getElementById('from-city').innerText;
+        const toCity = document.getElementById('to-city').innerText;
+        const departureDate = document.getElementById('departure-date').innerText;
+        const returnDate = document.getElementById('return-date').innerText;
+        const price = document.getElementById('price').innerText;
+
+        // বুকিং পেইজে রিডাইরেক্ট করুন এবং তথ্য পাঠান
+        window.location.href = `booking.html?flightId=${flightId}&fromCity=${fromCity}&toCity=${toCity}&departureDate=${departureDate}&returnDate=${returnDate}&price=${price}`;
+    });
+});
+</script>
 </body>
 </html>
