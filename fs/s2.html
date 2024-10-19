@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Search Engine</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #007bff;
+            color: white;
+            padding: 1rem 0;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .form-group {
+            flex: 1 1 calc(50% - 1rem);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group-full {
+            flex: 1 1 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        label {
+            margin-bottom: 0.5rem;
+        }
+
+        input, select, button {
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+            button:hover {
+                background-color: #0056b3;
+            }
+
+        #results {
+            margin-top: 2rem;
+        }
+
+        .flight-offer {
+            border: 1px solid #ccc;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+        }
+
+            .flight-offer h3 {
+                margin: 0 0 1rem;
+            }
+    </style>
+    <!-- Include Amadeus SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@amadeus/amadeus-js"></script>
+</head>
+<body>
+    <header>
+        <h1>Flight Search Engine</h1>
+    </header>
+    <div class="container">
+        <form id="flight-search-form">
+            <div class="form-group">
+                <label for="trip-type">Trip Type:</label>
+                <select id="trip-type" name="trip-type" required>
+                    <option value="one-way" selected>One Way</option>
+                    <option value="return">Return</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="travel-class">Travel Class:</label>
+                <select id="travel-class" name="travel-class" required>
+                    <option value="ECONOMY" selected>Economy</option>
+                    <option value="PREMIUM_ECONOMY">Premium Economy</option>
+                    <option value="BUSINESS">Business</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="from">Departing From:</label>
+                <input type="text" id="from" name="from" required>
+            </div>
+            <div class="form-group">
+                <label for="to">Arriving At:</label>
+                <input type="text" id="to" name="to" required>
+            </div>
+            <div class="form-group">
+                <label for="departure-date">Departure Date:</label>
+                <input type="date" id="departure-date" name="departure-date" required>
+            </div>
+            <div class="form-group">
+                <label for="return-date">Return Date:</label>
+                <input type="date" id="return-date" name="return-date">
+            </div>
+            <div class="form-group">
+                <label for="adults">Number of Adults:</label>
+                <input type="number" id="adults" name="adults" min="1" max="9" value="1" required>
+            </div>
+            <div class="form-group">
+                <label for="children">Number of Children:</label>
+                <input type="number" id="children" name="children" min="0" max="4" value="0">
+            </div>
+            <button type="submit">Search Flights</button>
+        </form>
+        <div id="results"></div>
+    </div>
+
+    <script>
+        const client_id = 'AUcgJZ6gtrI60afudJaDSuwKmyUoyTAN';
+        const client_secret = 'zAiEYEuKxuYTkvjc';
+
+        function getAccessToken() {
+            return fetch('https://test.api.amadeus.com/v1/security/oauth2/token', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `grant_type=client_credentials&client_id=${client_id}&client_secret=${client_secret}`
+            })
+                .then(response => response.json())
+                .then(data => data.access_token)
+                .catch(error => console.error('Error:', error));
+        }
+
+        function handleFormSubmission(event) {
+            event.preventDefault();
+
+            const tripType = document.getElementById('trip-type').value;
+            const from = document.getElementById('from').value;
+            const to = document.getElementById('to').value;
+            const departureDate = document.getElementById('departure-date').value;
+            const returnDate = document.getElementById('return-date').value;
+            const travelClass = document.getElementById('travel-class').value;
+            const adults = document.getElementById('adults').value;
+            const children = document.getElementById('children').value;
+
+            getAccessToken().then(accessToken => {
+                let url = `https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=${from}&destinationLocationCode=${to}&departureDate=${departureDate}&adults=${adults}&travelClass=${travelClass}`;
+
+                if (tripType === 'return' && returnDate) {
+                    url += `&returnDate=${returnDate}`;
+                }
+
+                if (children > 0) {
+                    url += `&children=${children}`;
+                }
+
+                fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        const resultsDiv = document.getElementById('results');
+                        resultsDiv.innerHTML = '';
+                        data.data.forEach(offer => {
+                            const offerDiv = document.createElement('div');
+                            offerDiv.className = 'flight-offer';
+                            offerDiv.innerHTML = `
+                                    <h3>Flight Offer ${offer.id}</h3>
+                                    <p><strong>Source:</strong> ${offer.source}</p>
+                                    <p><strong>Number of Bookable Seats:</strong> ${offer.numberOfBookableSeats}</p>
+                                    <p><strong>Last Ticketing Date:</strong> ${offer.lastTicketingDate}</p>
+                                    <h4>Itineraries:</h4>
+                                    ${offer.itineraries.map(itinerary => `
+                                        <div>
+                                            <p><strong>Duration:</strong> ${itinerary.duration}</p>
+                                            ${itinerary.segments.map(segment => `
+                                                <div>
+                                                    <p><strong>Departure:</strong> ${segment.departure.iataCode} at ${segment.departure.at}</p>
+                                                    <p><strong>Arrival:</strong> ${segment.arrival.iataCode} at ${segment.arrival.at}</p>
+                                                    <p><strong>Carrier Code:</strong> ${segment.carrierCode}</p>
+                                                    <p><strong>Flight Number:</strong> ${segment.number}</p>
+                                                    <p><strong>Aircraft:</strong> ${segment.aircraft.code}</p>
+                                                    <p><strong>Duration:</strong> ${segment.duration}</p>
+                                                </div>
+                                            `).join('')}
+                                        </div>
+                                    `).join('')}
+                                `;
+                            resultsDiv.appendChild(offerDiv);
+                        });
+                    })
+                    .catch(error => console.error('Error:', error));
+            });
+        }
+
+        document.getElementById('flight-search-form').addEventListener('submit', handleFormSubmission);
+    </script>
+</body>
+</html>
