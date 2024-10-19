@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .flight-details {
+            margin-bottom: 2rem;
+        }
+
+        .flight-details h2 {
+            margin: 0 0 1rem;
+        }
+
+        .flight-details p {
+            margin: 0.5rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="flight-details">
+            <h2>Flight Details</h2>
+            <p>From: <span id="from-city"></span></p>
+            <p>To: <span id="to-city"></span></p>
+            <p>Departure Date: <span id="departure-date"></span></p>
+            <p>Return Date: <span id="return-date"></span></p>
+            <p>Price: <span id="price"></span></p>
+        </div>
+        <!-- এখানে আপনার বুকিং ফর্ম যোগ করুন -->
+    </div>
+
+    <script>
+        // URL থেকে ফ্লাইটের তথ্য সংগ্রহ করুন
+        const urlParams = new URLSearchParams(window.location.search);
+        document.getElementById('from-city').innerText = urlParams.get('fromCity');
+        document.getElementById('to-city').innerText = urlParams.get('toCity');
+        document.getElementById('departure-date').innerText = urlParams.get('departureDate');
+        document.getElementById('return-date').innerText = urlParams.get('returnDate');
+        document.getElementById('price').innerText = urlParams.get('price');
+    </script>
+</body>
+</html>
