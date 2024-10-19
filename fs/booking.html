@@ -3,13 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Booking Page</title>
+    <title>Flight Booking</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             margin: 0;
             padding: 0;
+        }
+
+        header {
+            background-color: #007bff;
+            color: white;
+            padding: 1rem 0;
+            text-align: center;
         }
 
         .container {
@@ -20,40 +27,119 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-        .flight-details {
+        .flight-summary {
             margin-bottom: 2rem;
         }
 
-        .flight-details h2 {
-            margin: 0 0 1rem;
+        .flight-summary h3 {
+            margin-bottom: 1rem;
         }
 
-        .flight-details p {
+        .flight-summary p {
             margin: 0.5rem 0;
         }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        input, button {
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+            button:hover {
+                background-color: #0056b3;
+            }
     </style>
 </head>
 <body>
+    <header>
+        <h1>Flight Booking</h1>
+    </header>
     <div class="container">
-        <div class="flight-details">
-            <h2>Flight Details</h2>
-            <p>From: <span id="from-city"></span></p>
-            <p>To: <span id="to-city"></span></p>
-            <p>Departure Date: <span id="departure-date"></span></p>
-            <p>Return Date: <span id="return-date"></span></p>
-            <p>Price: <span id="price"></span></p>
+        <div id="flight-summary" class="flight-summary">
+            <h3>Flight Summary</h3>
+            <!-- Flight details will be populated here -->
         </div>
-        <!-- এখানে আপনার বুকিং ফর্ম যোগ করুন -->
+        <form id="flight-booking-form">
+            <div class="form-group">
+                <label for="passenger-name">Passenger Name:</label>
+                <input type="text" id="passenger-name" name="passenger-name" required>
+            </div>
+            <div class="form-group">
+                <label for="passenger-email">Passenger Email:</label>
+                <input type="email" id="passenger-email" name="passenger-email" required>
+            </div>
+            <div class="form-group">
+                <label for="passenger-phone">Passenger Phone:</label>
+                <input type="tel" id="passenger-phone" name="passenger-phone" required>
+            </div>
+            <button type="submit">Book Now</button>
+        </form>
     </div>
 
     <script>
-        // URL থেকে ফ্লাইটের তথ্য সংগ্রহ করুন
-        const urlParams = new URLSearchParams(window.location.search);
-        document.getElementById('from-city').innerText = urlParams.get('fromCity');
-        document.getElementById('to-city').innerText = urlParams.get('toCity');
-        document.getElementById('departure-date').innerText = urlParams.get('departureDate');
-        document.getElementById('return-date').innerText = urlParams.get('returnDate');
-        document.getElementById('price').innerText = urlParams.get('price');
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const offer = JSON.parse(urlParams.get('offer'));
+
+            const flightSummary = document.getElementById('flight-summary');
+            flightSummary.innerHTML = `
+                <p><strong>Source:</strong> ${offer.source}</p>
+                <p><strong>Number of Bookable Seats:</strong> ${offer.numberOfBookableSeats}</p>
+                <p><strong>Last Ticketing Date:</strong> ${offer.lastTicketingDate}</p>
+                <h4>Itineraries:</h4>
+                ${offer.itineraries.map(itinerary => `
+                    <div>
+                        <p><strong>Duration:</strong> ${itinerary.duration}</p>
+                        ${itinerary.segments.map(segment => `
+                            <div>
+                                <p><strong>Departure:</strong> ${segment.departure.iataCode} at ${segment.departure.at}</p>
+                                <p><strong>Arrival:</strong> ${segment.arrival.iataCode} at ${segment.arrival.at}</p>
+                                <p><strong>Carrier Code:</strong> ${segment.carrierCode}</p>
+                                <p><strong>Flight Number:</strong> ${segment.number}</p>
+                                <p><strong>Aircraft:</strong> ${segment.aircraft.code}</p>
+                                <p><strong>Duration:</strong> ${segment.duration}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                `).join('')}
+            `;
+
+            document.getElementById('flight-booking-form').addEventListener('submit', (event) => {
+                event.preventDefault();
+                const passengerName = document.getElementById('passenger-name').value;
+                const passengerEmail = document.getElementById('passenger-email').value;
+                const passengerPhone = document.getElementById('passenger-phone').value;
+
+                const booking = {
+                    passengerName,
+                    passengerEmail,
+                    passengerPhone,
+                    offer
+                };
+
+                const paymentUrl = `payment.html?booking=${encodeURIComponent(JSON.stringify(booking))}`;
+                window.location.href = paymentUrl;
+            });
+        });
     </script>
 </body>
 </html>
