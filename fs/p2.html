@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Booking Payment Page</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #0073e6;
+            color: #fff;
+            padding: 1rem 0;
+            text-align: center;
+        }
+
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .payment-options {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            margin-bottom: 2rem;
+        }
+
+        .payment-options h2 {
+            margin-bottom: 1rem;
+        }
+
+        .option {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .option input {
+            margin-right: 0.5rem;
+            vertical-align: middle;
+        }
+
+        .option label {
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+
+        .option label i {
+            margin-right: 0.5rem;
+        }
+
+        .payment-form {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            margin-bottom: 2rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem 0;
+            background-color: #0073e6;
+            color: #fff;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            main {
+                padding: 1rem;
+            }
+
+            .payment-options, .payment-form {
+                width: 100%;
+                padding: 1rem;
+                margin-bottom: 1rem;
+            }
+
+            .option input {
+                margin-right: 0.25rem;
+            }
+
+            .option label {
+                font-weight: normal;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header, footer {
+                padding: 0.5rem 0;
+            }
+
+            .payment-options, .payment-form {
+                padding: 0.5rem;
+            }
+
+            .option {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .option input {
+                margin: 0 0 0.5rem 0;
+            }
+
+            .option label {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Flight Booking Payment Page</h1>
+    </header>
+    <main>
+        <section class="payment-options">
+            <h2>Payment Option</h2>
+            <div class="option">
+                <input type="radio" name="payment-method" id="credit-debit-card" onclick="showOption('card')">
+                <label for="credit-debit-card">
+                    <i class="fas fa-credit-card"></i> Credit or Debit Card
+                    <i class="fab fa-cc-visa"></i>
+                    <i class="fab fa-cc-mastercard"></i>
+                    <i class="fab fa-cc-amex"></i>
+                    <i class="fab fa-cc-discover"></i>
+                </label>
+            </div>
+            <div class="option">
+                <input type="radio" name="payment-method" id="mobile-banking" onclick="showOption('mobile')">
+                <label for="mobile-banking">
+                    <i class="fas fa-mobile-alt"></i> Mobile Banking
+                </label>
+            </div>
+            <div class="option">
+                <input type="radio" name="payment-method" id="bank-transfer" onclick="showOption('bank')">
+                <label for="bank-transfer">
+                    <i class="fas fa-university"></i> Bank Transfer
+                </label>
+            </div>
+        </section>
+
+        <div id="card-form" class="payment-form hidden">
+            <form action="/charge" method="post" id="stripe-form">
+                <label for="card-element">Credit or Debit Card</label>
+                <div id="card-element"></div>
+                <button type="submit">Submit Payment</button>
+            </form>
+        </div>
+
+        <div id="mobile-form" class="payment-form hidden">
+            <h3>Select Mobile Banking Option</h3>
+            <label><input type="radio" name="mobile-option" value="bkash"> Bkash</label><br>
+            <label><input type="radio" name="mobile-option" value="nagad"> Nagad</label><br>
+            <label><input type="radio" name="mobile-option" value="rocket"> Rocket</label><br>
+            <button type="submit">Submit Payment</button>
+        </div>
+
+        <div id="bank-form" class="payment-form hidden">
+            <h3>Select Bank</h3>
+            <label><input type="radio" name="bank-option" value="city-bank"> City Bank</label><br>
+            <label><input type="radio" name="bank-option" value="mtb-bank"> MTB Bank</label><br>
+            <label><input type="radio" name="bank-option" value="ebl-bank"> EBL Bank</label><br>
+            <label><input type="radio" name="bank-option" value="barac-bank"> Barac Bank</label><br>
+            <button type="submit">Submit Payment</button>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2024 Flight Booking</p>
+    </footer>
+    <script>
+        function showOption(option) {
+            const cardForm = document.getElementById('card-form');
+            const mobileForm = document.getElementById('mobile-form');
+            const bankForm = document.getElementById('bank-form');
+            
+            cardForm.classList.add('hidden');
+            mobileForm.classList.add('hidden');
+            bankForm.classList.add('hidden');
+            
+            if (option === 'card') {
+                cardForm.classList.remove('hidden');
+            } else if (option === 'mobile') {
+                mobileForm.classList.remove('hidden');
+            } else if (option === 'bank') {
+                bankForm.classList.remove('hidden');
+            }
+        }
+
+        // Stripe API Key
+        const stripe = Stripe('your_stripe_public_key');
+
+        const elements = stripe.elements();
+        const cardElement = elements.create('card');
+        cardElement.mount('#card-element');
+
+        const paymentForm = document.getElementById('stripe-form');
+        paymentForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const {token, error} = await stripe.createToken(cardElement);
+            if (error) {
+                console.error(error);
+            } else {
+                // Handle token submission to your backend
+                console.log(token);
+            }
+        });
+    </script>
+</body>
+</html>
