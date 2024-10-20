@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Page</title>
+    <style>
+        .button {
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .payment-options {
+            margin-top: 20px;
+        }
+        .payment-option {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Payment Page</h1>
+    
+    <button class="button" onclick="bookNow()">Book Now</button>
+    <button class="button" onclick="payFirst()">Pay First</button>
+    
+    <div class="payment-options">
+        <h2>Select your payment option</h2>
+        <div class="payment-option">
+            <input type="radio" id="credit-debit" name="payment" value="Credit or Debit Card">
+            <label for="credit-debit">Credit or Debit Card</label>
+        </div>
+        <div class="payment-option">
+            <input type="radio" id="mobile-banking" name="payment" value="Mobile Banking">
+            <label for="mobile-banking">Mobile Banking</label>
+        </div>
+        <div class="payment-option">
+            <input type="radio" id="bank-transfer" name="payment" value="Bank Transfer">
+            <label for="bank-transfer">Bank Transfer</label>
+        </div>
+    </div>
+
+    <script>
+        function bookNow() {
+            alert("Book Now button clicked");
+        }
+
+        function payFirst() {
+            alert("Pay First button clicked");
+        }
+    </script>
+</body>
+</html>
