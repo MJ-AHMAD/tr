@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #007bff;
+            color: white;
+            padding: 1rem 0;
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .payment-options {
+            margin-top: 20px;
+        }
+        .payment-option {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Payment Page</h1>
+    </header>
+    <div class="container">
+        <h2>Select your payment option</h2>
+        <div class="payment-options">
+            <div class="payment-option">
+                <input type="radio" id="credit-debit" name="payment" value="Credit or Debit Card" onclick="location.href='01.html'">
+                <label for="credit-debit">Credit or Debit Card</label>
+            </div>
+            <div class="payment-option">
+                <input type="radio" id="mobile-banking" name="payment" value="Mobile Banking" onclick="location.href='11.html'">
+                <label for="mobile-banking">Mobile Banking</label>
+            </div>
+            <div class="payment-option">
+                <input type="radio" id="bank-transfer" name="payment" value="Bank Transfer" onclick="location.href='11.html'">
+                <label for="bank-transfer">Bank Transfer</label>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
